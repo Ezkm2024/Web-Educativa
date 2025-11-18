@@ -306,61 +306,71 @@ function spinRoulette() {
     const spins = minSpins + Math.random() * (maxSpins - minSpins);
     const randomSegment = Math.floor(Math.random() * segments);
     
-    // Calcular ángulo final
-    // Los segmentos en CSS están rotados: 0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg
-    // El puntero está fijo en la parte superior (0 grados)
-    // Para que el segmento aleatorio quede debajo del puntero:
-    // - El segmento 0 (rotado 0deg) debe rotar 0deg para quedar en el puntero
-    // - El segmento 1 (rotado 45deg) debe rotar -45deg para quedar en el puntero
-    // - En general: rotar -(segmento * 45deg)
-    // Pero como queremos que gire varias vueltas, sumamos spins * 360
-    const targetAngle = -(randomSegment * segmentAngle);
+    // IMPORTANTE: Sincronización con CSS
+    // El conic-gradient en CSS usa "from -90deg", lo que significa:
+    // - El primer color (rojo #dd0031) empieza en la parte superior (visualmente 0°)
+    // - En coordenadas matemáticas, la parte superior es -90° (o 270°)
+    // - Los segmentos HTML están rotados: -22.5°, 22.5°, 67.5°, 112.5°, etc.
+    // - El puntero está fijo en la parte superior (visualmente 0°, matemáticamente -90°)
+    
+    // Calcular ángulo final para que el segmento aleatorio quede debajo del puntero
+    // Los segmentos están centrados en: -22.5°, 22.5°, 67.5°, 112.5°, 157.5°, 202.5°, 247.5°, 292.5°
+    // Para que el segmento N quede en el puntero (0° visual = -90° matemático):
+    // - Segmento 0 (centrado en -22.5°): necesita rotar -22.5° - (-90°) = 67.5°
+    // - Segmento 1 (centrado en 22.5°): necesita rotar 22.5° - (-90°) = 112.5°
+    // - En general: segmentCenterAngle - (-90°) = segmentCenterAngle + 90°
+    
+    const segmentCenters = [-22.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5];
+    const targetSegmentCenter = segmentCenters[randomSegment];
+    const rotationOffset = -90; // Offset del conic-gradient
+    const targetAngle = targetSegmentCenter - rotationOffset; // Ángulo necesario para centrar el segmento
+    
     const finalAngle = currentRotation + (spins * 360) + targetAngle;
     currentRotation = finalAngle;
     
     // Aplicar rotación
     rouletteWheel.style.transform = `rotate(${finalAngle}deg)`;
     
-    // Determinar concepto ganador (debe coincidir con randomSegment)
-    // El puntero está fijo en 0 grados (arriba)
-    // Cuando la ruleta rota, calculamos qué segmento está en 0 grados
+    // Determinar concepto ganador - CÁLCULO PRECISO
+    // El puntero está fijo en la parte superior (0° visual = -90° matemático)
+    // Cuando la ruleta rota X grados, necesitamos calcular qué segmento está en -90°
     
     // Normalizar el ángulo final a 0-360
     let normalizedAngle = ((finalAngle % 360) + 360) % 360;
     
-    // Calcular qué segmento está en la posición del puntero (0 grados)
-    // Si la ruleta rota X grados, el segmento que estaba en -X ahora está en 0
-    // Los segmentos están en: 0, 45, 90, 135, 180, 225, 270, 315
-    // Necesitamos encontrar qué segmento está en 0 después de la rotación
+    // Convertir a coordenadas matemáticas (0° = derecha, 90° = abajo, -90° = arriba)
+    // El puntero está en -90° (arriba)
+    // Si la ruleta rota X grados, el segmento que estaba en (-90° - X) ahora está en -90°
+    let pointerAngleMath = -90; // Posición del puntero en coordenadas matemáticas
+    let relativeAngle = (pointerAngleMath - normalizedAngle + 360) % 360;
     
-    // El ángulo del puntero relativo a la ruleta (inverso de la rotación)
-    let pointerAngle = (360 - normalizedAngle) % 360;
+    // Convertir de vuelta a coordenadas visuales (0° = arriba)
+    let pointerAngleVisual = (relativeAngle + 90) % 360;
     
-    // Calcular el índice del segmento ganador
-    // Cada segmento ocupa 45 grados
-    // El segmento 0 está centrado en 0deg (rango: -22.5 a 22.5)
-    // El segmento 1 está centrado en 45deg (rango: 22.5 a 67.5)
-    // Ajustamos con segmentAngle/2 para hacer snap al centro del sector
-    let winningSegment = Math.floor((pointerAngle + (segmentAngle / 2)) / segmentAngle) % segments;
+    // Calcular qué segmento está en esa posición
+    // Los segmentos están centrados en: -22.5°, 22.5°, 67.5°, 112.5°, 157.5°, 202.5°, 247.5°, 292.5°
+    // En coordenadas visuales (0° = arriba): 67.5°, 112.5°, 157.5°, 202.5°, 247.5°, 292.5°, 337.5°, 22.5°
+    // Pero mejor: calcular directamente desde el ángulo normalizado
     
-    // Asegurarnos de que el índice esté en el rango correcto
-    if (winningSegment >= segments) winningSegment = segments - 1;
-    if (winningSegment < 0) winningSegment = 0;
+    // Método más directo: usar el segmento aleatorio que ya calculamos
+    // Pero verificamos con cálculo matemático para depuración
+    let calculatedSegment = Math.floor((pointerAngleVisual + (segmentAngle / 2)) / segmentAngle) % segments;
+    if (calculatedSegment < 0) calculatedSegment += segments;
     
-    // Usar el segmento aleatorio directamente (más confiable)
-    // Pero verificamos con el cálculo para depuración
-    const calculatedSegment = winningSegment;
-    winningSegment = randomSegment; // Usar el segmento que realmente queremos
+    // Usar el segmento aleatorio (que es el correcto porque lo calculamos para que quede ahí)
+    let winningSegment = randomSegment;
     
-    // Logs de depuración
+    // Logs de depuración detallados
     console.log('=== DEPURACIÓN RULETA ===');
     console.log('Segmento aleatorio seleccionado:', randomSegment);
-    console.log('Ángulo objetivo:', targetAngle.toFixed(2) + '°');
+    console.log('Centro del segmento (CSS):', targetSegmentCenter + '°');
+    console.log('Ángulo objetivo calculado:', targetAngle.toFixed(2) + '°');
     console.log('Ángulo final (normalizado):', normalizedAngle.toFixed(2) + '°');
-    console.log('Ángulo del puntero:', pointerAngle.toFixed(2) + '°');
+    console.log('Ángulo relativo al puntero:', relativeAngle.toFixed(2) + '°');
+    console.log('Ángulo del puntero (visual):', pointerAngleVisual.toFixed(2) + '°');
     console.log('Segmento calculado (verificación):', calculatedSegment);
-    console.log('Segmento usado (aleatorio):', winningSegment);
-    console.log('¿Coinciden?', calculatedSegment === randomSegment ? '✅ SÍ' : '❌ NO');
+    console.log('Segmento usado:', winningSegment);
+    console.log('¿Coinciden?', calculatedSegment === randomSegment ? '✅ SÍ' : '❌ NO - ERROR DE SINCRONIZACIÓN');
     console.log('Ángulo por segmento:', segmentAngle + '°');
     console.log('========================');
     
