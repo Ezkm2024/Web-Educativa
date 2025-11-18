@@ -352,25 +352,69 @@ function spinRoulette() {
     // En coordenadas visuales (0° = arriba): 67.5°, 112.5°, 157.5°, 202.5°, 247.5°, 292.5°, 337.5°, 22.5°
     // Pero mejor: calcular directamente desde el ángulo normalizado
     
-    // Método más directo: usar el segmento aleatorio que ya calculamos
-    // Pero verificamos con cálculo matemático para depuración
-    let calculatedSegment = Math.floor((pointerAngleVisual + (segmentAngle / 2)) / segmentAngle) % segments;
-    if (calculatedSegment < 0) calculatedSegment += segments;
+    // Calcular el segmento ganador desde el ángulo final (método correcto)
+    // El puntero está en la parte superior (0° visual = -90° matemático)
+    // Necesitamos encontrar qué segmento está en esa posición después de la rotación
     
-    // Usar el segmento aleatorio (que es el correcto porque lo calculamos para que quede ahí)
-    let winningSegment = randomSegment;
+    // Los segmentos están centrados en: -22.5°, 22.5°, 67.5°, 112.5°, 157.5°, 202.5°, 247.5°, 292.5°
+    // En coordenadas visuales (0° = arriba): estos se mapean a:
+    // Segmento 0: -22.5° → 67.5° visual
+    // Segmento 1: 22.5° → 112.5° visual
+    // Segmento 2: 67.5° → 157.5° visual
+    // etc.
+    
+    // Calcular qué segmento está en la posición del puntero (0° visual)
+    // Después de rotar, el segmento que está en 0° visual es el ganador
+    // El ángulo normalizado nos dice cuánto rotó la ruleta
+    // Necesitamos calcular qué segmento original está ahora en 0°
+    
+    // Método: usar atan2 conceptualmente
+    // El puntero está en 0° (arriba)
+    // Si la ruleta rotó X grados, el segmento que estaba en -X ahora está en 0°
+    // Pero necesitamos mapear esto a los índices de los segmentos
+    
+    // Calcular el ángulo del segmento que está en el puntero
+    // El puntero está en 0° visual = -90° matemático
+    // Después de rotar normalizedAngle, el segmento que está en el puntero es:
+    let segmentAngleAtPointer = (-90 - normalizedAngle + 360) % 360;
+    
+    // Mapear este ángulo a un índice de segmento
+    // Los segmentos están en: -22.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5
+    // Convertir a rango 0-360: 337.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5
+    const segmentAngles360 = [337.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5];
+    
+    // Encontrar el segmento más cercano al ángulo calculado
+    let minDiff = Infinity;
+    let winningSegment = 0;
+    for (let i = 0; i < segments; i++) {
+        let diff = Math.abs(segmentAngleAtPointer - segmentAngles360[i]);
+        if (diff > 180) diff = 360 - diff; // Distancia circular
+        if (diff < minDiff) {
+            minDiff = diff;
+            winningSegment = i;
+        }
+    }
+    
+    // Verificación alternativa: usar división directa con offset
+    // Ajustar para que 0° visual corresponda al centro del primer segmento
+    let adjustedAngle = (segmentAngleAtPointer + 22.5 + 360) % 360;
+    let calculatedSegment = Math.floor(adjustedAngle / segmentAngle) % segments;
+    
+    // Usar el cálculo más preciso (el de distancia mínima)
+    // Pero verificar con el método alternativo
     
     // Logs de depuración detallados
     console.log('=== DEPURACIÓN RULETA ===');
-    console.log('Segmento aleatorio seleccionado:', randomSegment);
-    console.log('Centro del segmento (CSS):', targetSegmentCenter + '°');
+    console.log('Segmento aleatorio (target):', randomSegment);
+    console.log('Centro del segmento target (CSS):', targetSegmentCenter + '°');
     console.log('Ángulo objetivo calculado:', targetAngle.toFixed(2) + '°');
     console.log('Ángulo final (normalizado):', normalizedAngle.toFixed(2) + '°');
-    console.log('Ángulo relativo al puntero:', relativeAngle.toFixed(2) + '°');
-    console.log('Ángulo del puntero (visual):', pointerAngleVisual.toFixed(2) + '°');
-    console.log('Segmento calculado (verificación):', calculatedSegment);
+    console.log('Ángulo del segmento en puntero:', segmentAngleAtPointer.toFixed(2) + '°');
+    console.log('Segmento calculado (distancia mínima):', winningSegment);
+    console.log('Segmento calculado (división):', calculatedSegment);
     console.log('Segmento usado:', winningSegment);
-    console.log('¿Coinciden?', calculatedSegment === randomSegment ? '✅ SÍ' : '❌ NO - ERROR DE SINCRONIZACIÓN');
+    console.log('¿Coinciden con target?', winningSegment === randomSegment ? '✅ SÍ' : '❌ NO');
+    console.log('Diferencia mínima:', minDiff.toFixed(2) + '°');
     console.log('Ángulo por segmento:', segmentAngle + '°');
     console.log('========================');
     
