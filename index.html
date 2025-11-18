@@ -21,7 +21,9 @@
             <nav class="nav" id="nav">
                 <a href="#introduccion" class="nav-link">Introducción</a>
                 <a href="#caracteristicas" class="nav-link">Características</a>
+                <a href="#ruleta" class="nav-link">Ruleta</a>
                 <a href="#trivia" class="nav-link">Trivia</a>
+                <a href="#recursos" class="nav-link">Recursos</a>
             </nav>
         </div>
     </header>
@@ -141,6 +143,44 @@
             </div>
         </section>
 
+        <!-- Sección Ruleta -->
+        <section id="ruleta" class="section">
+            <div class="container">
+                <h2 class="section-title">🎰 Ruleta de Conceptos Angular</h2>
+                <p class="section-subtitle">Gira la ruleta y aprende conceptos sobre Angular de forma divertida</p>
+                <div class="roulette-container">
+                    <div class="roulette-wrapper">
+                        <div class="roulette-wheel" id="roulette-wheel">
+                            <div class="roulette-segment" data-concept="Componentes" data-color="#dd0031">Componentes</div>
+                            <div class="roulette-segment" data-concept="Directivas" data-color="#1976d2">Directivas</div>
+                            <div class="roulette-segment" data-concept="Servicios" data-color="#4caf50">Servicios</div>
+                            <div class="roulette-segment" data-concept="Módulos" data-color="#ff9800">Módulos</div>
+                            <div class="roulette-segment" data-concept="Routing" data-color="#9c27b0">Routing</div>
+                            <div class="roulette-segment" data-concept="Pipes" data-color="#f44336">Pipes</div>
+                            <div class="roulette-segment" data-concept="Forms" data-color="#00bcd4">Forms</div>
+                            <div class="roulette-segment" data-concept="HTTP" data-color="#ffc107">HTTP</div>
+                        </div>
+                        <div class="roulette-pointer"></div>
+                    </div>
+                    <div class="roulette-controls">
+                        <button id="spin-btn" class="btn-spin">Girar Ruleta</button>
+                        <div class="roulette-stats">
+                            <div class="stat-item">
+                                <span class="stat-label">Puntos:</span>
+                                <span class="stat-value" id="roulette-points">0</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-label">Giros:</span>
+                                <span class="stat-value" id="roulette-spins">0</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="roulette-result" class="roulette-result"></div>
+                    <div id="roulette-info" class="roulette-info"></div>
+                </div>
+            </div>
+        </section>
+
         <!-- Sección Trivia -->
         <section id="trivia" class="section section-alt">
             <div class="container">
@@ -163,6 +203,84 @@
                         <div id="trivia-feedback" class="trivia-feedback"></div>
                         <button id="next-btn" class="btn-secondary" style="display: none;">Siguiente Pregunta</button>
                         <button id="restart-btn" class="btn-secondary" style="display: none;">Reiniciar Trivia</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Recursos -->
+        <section id="recursos" class="section">
+            <div class="container">
+                <h2 class="section-title">📚 Recursos y Aprendizaje</h2>
+                <div class="resources-grid">
+                    <div class="resource-card">
+                        <div class="resource-icon">📖</div>
+                        <h3>Documentación Oficial</h3>
+                        <p>La mejor fuente de información sobre Angular directamente de Google.</p>
+                        <a href="https://angular.io/docs" target="_blank" class="resource-link">Visitar Docs →</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">🎓</div>
+                        <h3>Tutoriales Interactivos</h3>
+                        <p>Aprende Angular paso a paso con ejercicios prácticos y ejemplos.</p>
+                        <a href="https://angular.io/tutorial" target="_blank" class="resource-link">Comenzar →</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">💻</div>
+                        <h3>Angular CLI</h3>
+                        <p>Herramienta de línea de comandos para crear y gestionar proyectos Angular.</p>
+                        <a href="https://angular.io/cli" target="_blank" class="resource-link">Ver CLI →</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">🎨</div>
+                        <h3>Angular Material</h3>
+                        <p>Componentes UI listos para usar siguiendo Material Design.</p>
+                        <a href="https://material.angular.io" target="_blank" class="resource-link">Explorar →</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">📺</div>
+                        <h3>YouTube Channel</h3>
+                        <p>Videos educativos y tutoriales sobre Angular en español.</p>
+                        <a href="https://www.youtube.com/results?search_query=angular+tutorial" target="_blank" class="resource-link">Ver Videos →</a>
+                    </div>
+                    <div class="resource-card">
+                        <div class="resource-icon">💬</div>
+                        <h3>Comunidad</h3>
+                        <p>Únete a la comunidad de desarrolladores Angular en Discord y Stack Overflow.</p>
+                        <a href="https://discord.gg/angular" target="_blank" class="resource-link">Unirse →</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Conceptos Adicionales -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">🔍 Conceptos Clave de Angular</h2>
+                <div class="concepts-grid">
+                    <div class="concept-card">
+                        <h3>🔄 Componentes</h3>
+                        <p>Los componentes son los bloques fundamentales de Angular. Cada componente tiene su propia lógica, plantilla y estilos, lo que permite crear aplicaciones modulares y reutilizables.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📦 Módulos</h3>
+                        <p>Los módulos agrupan componentes, servicios y otros elementos relacionados. El módulo raíz (AppModule) es el punto de entrada de la aplicación.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🎯 Directivas</h3>
+                        <p>Las directivas extienden el HTML con comportamientos personalizados. Angular incluye directivas estructurales (*ngIf, *ngFor) y directivas de atributo.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🔌 Servicios</h3>
+                        <p>Los servicios son clases que contienen lógica de negocio reutilizable. Se inyectan en componentes mediante el sistema de inyección de dependencias.</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>🛣️ Routing</h3>
+                        <p>El sistema de enrutamiento permite navegar entre diferentes vistas sin recargar la página, creando una experiencia de aplicación de una sola página (SPA).</p>
+                    </div>
+                    <div class="concept-card">
+                        <h3>📝 Forms</h3>
+                        <p>Angular ofrece dos enfoques para formularios: Template-driven Forms y Reactive Forms, ambos con validación integrada.</p>
                     </div>
                 </div>
             </div>

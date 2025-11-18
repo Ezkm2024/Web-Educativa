@@ -544,6 +544,314 @@ html {
     box-shadow: var(--shadow);
 }
 
+/* Section Subtitle */
+.section-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-light);
+    margin-bottom: 3rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* Ruleta */
+.roulette-container {
+    max-width: 900px;
+    margin: 0 auto;
+    background: white;
+    padding: 3rem;
+    border-radius: 20px;
+    box-shadow: var(--shadow-hover);
+}
+
+.roulette-wrapper {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    margin: 0 auto 3rem;
+}
+
+.roulette-wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 8px solid var(--text-dark);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+}
+
+.roulette-segment {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    transform-origin: right bottom;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 1rem;
+    color: white;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+    clip-path: polygon(0 0, 100% 0, 50% 50%);
+    overflow: hidden;
+}
+
+.roulette-segment::before {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 2px;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.roulette-segment:nth-child(1) {
+    background: #dd0031;
+    transform: rotate(0deg);
+}
+
+.roulette-segment:nth-child(2) {
+    background: #1976d2;
+    transform: rotate(45deg);
+}
+
+.roulette-segment:nth-child(3) {
+    background: #4caf50;
+    transform: rotate(90deg);
+}
+
+.roulette-segment:nth-child(4) {
+    background: #ff9800;
+    transform: rotate(135deg);
+}
+
+.roulette-segment:nth-child(5) {
+    background: #9c27b0;
+    transform: rotate(180deg);
+}
+
+.roulette-segment:nth-child(6) {
+    background: #f44336;
+    transform: rotate(225deg);
+}
+
+.roulette-segment:nth-child(7) {
+    background: #00bcd4;
+    transform: rotate(270deg);
+}
+
+.roulette-segment:nth-child(8) {
+    background: #ffc107;
+    transform: rotate(315deg);
+}
+
+.roulette-pointer {
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 40px solid var(--primary-color);
+    z-index: 10;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.roulette-controls {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.btn-spin {
+    padding: 1.2rem 3rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+    box-shadow: 0 4px 15px rgba(221, 0, 49, 0.4);
+    margin-bottom: 2rem;
+}
+
+.btn-spin:hover:not(:disabled) {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(221, 0, 49, 0.5);
+}
+
+.btn-spin:active:not(:disabled) {
+    transform: translateY(-1px);
+}
+
+.btn-spin:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.roulette-stats {
+    display: flex;
+    justify-content: center;
+    gap: 3rem;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    font-weight: 500;
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.roulette-result {
+    text-align: center;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-radius: 15px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.5s;
+}
+
+.roulette-result.show {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.roulette-info {
+    background: var(--bg-light);
+    padding: 2rem;
+    border-radius: 15px;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: var(--text-dark);
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s;
+}
+
+.roulette-info.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Recursos */
+.resources-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.resource-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s;
+    display: flex;
+    flex-direction: column;
+}
+
+.resource-card:hover {
+    transform: translateY(-10px);
+    box-shadow: var(--shadow-hover);
+}
+
+.resource-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.resource-card h3 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.resource-card p {
+    color: var(--text-light);
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+    line-height: 1.6;
+}
+
+.resource-link {
+    color: var(--secondary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s;
+    display: inline-block;
+}
+
+.resource-link:hover {
+    color: var(--primary-color);
+    transform: translateX(5px);
+}
+
+/* Conceptos */
+.concepts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.concept-card {
+    background: white;
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: var(--shadow);
+    transition: all 0.3s;
+    border-left: 4px solid var(--primary-color);
+}
+
+.concept-card:hover {
+    transform: translateX(10px);
+    box-shadow: var(--shadow-hover);
+}
+
+.concept-card h3 {
+    color: var(--text-dark);
+    margin-bottom: 1rem;
+    font-size: 1.3rem;
+}
+
+.concept-card p {
+    color: var(--text-light);
+    line-height: 1.8;
+}
+
 /* Footer */
 .footer {
     background: var(--text-dark);
@@ -724,6 +1032,30 @@ html {
     }
 }
 
+@media (max-width: 768px) {
+    .roulette-wrapper {
+        width: 300px;
+        height: 300px;
+    }
+
+    .roulette-segment {
+        font-size: 0.85rem;
+    }
+
+    .roulette-container {
+        padding: 2rem 1.5rem;
+    }
+
+    .roulette-stats {
+        gap: 2rem;
+    }
+
+    .resources-grid,
+    .concepts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
 @media (max-width: 480px) {
     .logo {
         font-size: 1.5rem;
@@ -754,6 +1086,11 @@ html {
     .section-title {
         font-size: 1.75rem;
         margin-bottom: 2rem;
+    }
+
+    .section-subtitle {
+        font-size: 1rem;
+        padding: 0 1rem;
     }
 
     .intro-text {
@@ -791,6 +1128,48 @@ html {
 
     .feature-number {
         font-size: 2.5rem;
+    }
+
+    .roulette-wrapper {
+        width: 250px;
+        height: 250px;
+    }
+
+    .roulette-segment {
+        font-size: 0.75rem;
+    }
+
+    .roulette-container {
+        padding: 1.5rem 1rem;
+    }
+
+    .btn-spin {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+    }
+
+    .roulette-stats {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+
+    .roulette-result {
+        font-size: 1.2rem;
+        padding: 1rem;
+    }
+
+    .roulette-info {
+        padding: 1.5rem;
+        font-size: 1rem;
+    }
+
+    .resource-card,
+    .concept-card {
+        padding: 1.5rem;
     }
 
     .footer {

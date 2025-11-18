@@ -239,8 +239,163 @@ const observer = new IntersectionObserver((entries) => {
 }, observerOptions);
 
 // Observar elementos para animaciones al hacer scroll
-document.querySelectorAll('.feature-card, .use-card').forEach(card => {
+document.querySelectorAll('.feature-card, .use-card, .resource-card, .concept-card').forEach(card => {
     card.style.opacity = '0';
     observer.observe(card);
 });
+
+// ========== JUEGO DE RULETA ==========
+const rouletteWheel = document.getElementById('roulette-wheel');
+const spinBtn = document.getElementById('spin-btn');
+const rouletteResult = document.getElementById('roulette-result');
+const rouletteInfo = document.getElementById('roulette-info');
+const roulettePoints = document.getElementById('roulette-points');
+const rouletteSpins = document.getElementById('roulette-spins');
+
+let isSpinning = false;
+let totalPoints = 0;
+let totalSpins = 0;
+let currentRotation = 0;
+
+// Información sobre cada concepto
+const conceptInfo = {
+    'Componentes': {
+        description: 'Los componentes son los bloques fundamentales de Angular. Cada componente encapsula lógica, plantilla y estilos, permitiendo crear aplicaciones modulares y reutilizables.',
+        points: 10
+    },
+    'Directivas': {
+        description: 'Las directivas extienden el HTML con comportamientos personalizados. Angular incluye directivas estructurales (*ngIf, *ngFor) y directivas de atributo para manipular el DOM.',
+        points: 8
+    },
+    'Servicios': {
+        description: 'Los servicios son clases que contienen lógica de negocio reutilizable. Se inyectan en componentes mediante el sistema de inyección de dependencias de Angular.',
+        points: 12
+    },
+    'Módulos': {
+        description: 'Los módulos agrupan componentes, servicios y otros elementos relacionados. El AppModule es el módulo raíz que arranca la aplicación Angular.',
+        points: 9
+    },
+    'Routing': {
+        description: 'El sistema de enrutamiento permite navegar entre diferentes vistas sin recargar la página, creando una experiencia de aplicación de una sola página (SPA).',
+        points: 11
+    },
+    'Pipes': {
+        description: 'Los pipes transforman datos en las plantillas. Angular incluye pipes integrados (date, currency, uppercase) y permite crear pipes personalizados.',
+        points: 7
+    },
+    'Forms': {
+        description: 'Angular ofrece dos enfoques para formularios: Template-driven Forms y Reactive Forms, ambos con validación integrada y manejo de errores.',
+        points: 13
+    },
+    'HTTP': {
+        description: 'El servicio HttpClient permite realizar peticiones HTTP a APIs. Angular incluye interceptores para manejar requests y responses de forma centralizada.',
+        points: 10
+    }
+};
+
+// Función para girar la ruleta
+function spinRoulette() {
+    if (isSpinning) return;
+    
+    isSpinning = true;
+    spinBtn.disabled = true;
+    
+    // Ocultar resultados anteriores
+    rouletteResult.classList.remove('show');
+    rouletteInfo.classList.remove('show');
+    
+    // Calcular rotación aleatoria (mínimo 3 vueltas completas)
+    const segments = 8;
+    const segmentAngle = 360 / segments;
+    const minSpins = 3;
+    const maxSpins = 6;
+    const spins = minSpins + Math.random() * (maxSpins - minSpins);
+    const randomSegment = Math.floor(Math.random() * segments);
+    
+    // Calcular ángulo final
+    const finalAngle = currentRotation + (spins * 360) + (randomSegment * segmentAngle);
+    currentRotation = finalAngle;
+    
+    // Aplicar rotación
+    rouletteWheel.style.transform = `rotate(${finalAngle}deg)`;
+    
+    // Determinar concepto ganador
+    const normalizedAngle = (360 - (finalAngle % 360)) % 360;
+    const winningSegment = Math.floor(normalizedAngle / segmentAngle);
+    const segmentsArray = Array.from(rouletteWheel.querySelectorAll('.roulette-segment'));
+    const winningConcept = segmentsArray[winningSegment].getAttribute('data-concept');
+    
+    // Mostrar resultado después de la animación
+    setTimeout(() => {
+        const concept = conceptInfo[winningConcept];
+        const pointsEarned = concept.points;
+        totalPoints += pointsEarned;
+        totalSpins++;
+        
+        // Actualizar estadísticas
+        roulettePoints.textContent = totalPoints;
+        rouletteSpins.textContent = totalSpins;
+        
+        // Mostrar resultado
+        rouletteResult.textContent = `¡${winningConcept}! +${pointsEarned} puntos`;
+        rouletteResult.classList.add('show');
+        
+        // Mostrar información
+        setTimeout(() => {
+            rouletteInfo.textContent = concept.description;
+            rouletteInfo.classList.add('show');
+        }, 500);
+        
+        isSpinning = false;
+        spinBtn.disabled = false;
+        
+        // Efecto de confeti si obtiene muchos puntos
+        if (pointsEarned >= 12) {
+            createConfetti();
+        }
+    }, 4000);
+}
+
+// Función para crear efecto de confeti
+function createConfetti() {
+    const colors = ['#dd0031', '#1976d2', '#4caf50', '#ff9800', '#9c27b0', '#f44336', '#00bcd4', '#ffc107'];
+    const confettiCount = 50;
+    
+    for (let i = 0; i < confettiCount; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.width = '10px';
+        confetti.style.height = '10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.left = Math.random() * 100 + '%';
+        confetti.style.top = '-10px';
+        confetti.style.borderRadius = '50%';
+        confetti.style.pointerEvents = 'none';
+        confetti.style.zIndex = '9999';
+        confetti.style.animation = `confettiFall ${2 + Math.random() * 2}s linear forwards`;
+        
+        document.body.appendChild(confetti);
+        
+        setTimeout(() => {
+            confetti.remove();
+        }, 4000);
+    }
+}
+
+// Agregar animación de confeti al CSS dinámicamente
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes confettiFall {
+        to {
+            transform: translateY(100vh) rotate(360deg);
+            opacity: 0;
+        }
+    }
+`;
+document.head.appendChild(style);
+
+// Event listener para el botón de girar
+if (spinBtn) {
+    spinBtn.addEventListener('click', spinRoulette);
+}
 
