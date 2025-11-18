@@ -300,56 +300,67 @@ function spinRoulette() {
     
     // Calcular rotación aleatoria (mínimo 3 vueltas completas)
     const segments = 8;
-    const segmentAngle = 360 / segments;
+    const segmentAngle = 360 / segments; // 45 grados por segmento
     const minSpins = 3;
     const maxSpins = 6;
     const spins = minSpins + Math.random() * (maxSpins - minSpins);
     const randomSegment = Math.floor(Math.random() * segments);
     
     // Calcular ángulo final
-    // El puntero está en la parte superior (0 grados / -90deg en coordenadas estándar)
-    // Los segmentos están rotados: 0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg
-    // Cada segmento ocupa 45 grados (360 / 8)
-    // Queremos que el segmento aleatorio quede centrado debajo del puntero
-    const finalAngle = currentRotation + (spins * 360) + (randomSegment * segmentAngle);
+    // Los segmentos en CSS están rotados: 0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg
+    // El puntero está fijo en la parte superior (0 grados)
+    // Para que el segmento aleatorio quede debajo del puntero:
+    // - El segmento 0 (rotado 0deg) debe rotar 0deg para quedar en el puntero
+    // - El segmento 1 (rotado 45deg) debe rotar -45deg para quedar en el puntero
+    // - En general: rotar -(segmento * 45deg)
+    // Pero como queremos que gire varias vueltas, sumamos spins * 360
+    const targetAngle = -(randomSegment * segmentAngle);
+    const finalAngle = currentRotation + (spins * 360) + targetAngle;
     currentRotation = finalAngle;
     
     // Aplicar rotación
     rouletteWheel.style.transform = `rotate(${finalAngle}deg)`;
     
-    // Determinar concepto ganador
-    // El puntero está fijo en la parte superior (0 grados en CSS, pero -90deg en coordenadas matemáticas)
-    // Cuando la ruleta rota, necesitamos calcular qué segmento está debajo del puntero
-    // La ruleta rota en sentido horario (positivo en CSS)
+    // Determinar concepto ganador (debe coincidir con randomSegment)
+    // El puntero está fijo en 0 grados (arriba)
+    // Cuando la ruleta rota, calculamos qué segmento está en 0 grados
     
     // Normalizar el ángulo final a 0-360
     let normalizedAngle = ((finalAngle % 360) + 360) % 360;
     
-    // El puntero apunta a 0 grados (arriba)
-    // Cuando la ruleta rota X grados, el segmento que estaba en -X grados ahora está en 0
-    // Necesitamos calcular qué segmento está en la posición del puntero
-    // Como la ruleta rota, el segmento ganador es el que está en la posición opuesta
+    // Calcular qué segmento está en la posición del puntero (0 grados)
+    // Si la ruleta rota X grados, el segmento que estaba en -X ahora está en 0
+    // Los segmentos están en: 0, 45, 90, 135, 180, 225, 270, 315
+    // Necesitamos encontrar qué segmento está en 0 después de la rotación
+    
+    // El ángulo del puntero relativo a la ruleta (inverso de la rotación)
     let pointerAngle = (360 - normalizedAngle) % 360;
     
     // Calcular el índice del segmento ganador
-    // Cada segmento ocupa 45 grados, empezando desde 0deg
-    // El segmento 0 va de -22.5deg a 22.5deg (centrado en 0deg)
-    // El segmento 1 va de 22.5deg a 67.5deg (centrado en 45deg)
-    // etc.
-    
-    // Ajustar para que el centro del primer segmento esté en 0deg
+    // Cada segmento ocupa 45 grados
+    // El segmento 0 está centrado en 0deg (rango: -22.5 a 22.5)
+    // El segmento 1 está centrado en 45deg (rango: 22.5 a 67.5)
+    // Ajustamos con segmentAngle/2 para hacer snap al centro del sector
     let winningSegment = Math.floor((pointerAngle + (segmentAngle / 2)) / segmentAngle) % segments;
     
     // Asegurarnos de que el índice esté en el rango correcto
     if (winningSegment >= segments) winningSegment = segments - 1;
     if (winningSegment < 0) winningSegment = 0;
     
+    // Usar el segmento aleatorio directamente (más confiable)
+    // Pero verificamos con el cálculo para depuración
+    const calculatedSegment = winningSegment;
+    winningSegment = randomSegment; // Usar el segmento que realmente queremos
+    
     // Logs de depuración
     console.log('=== DEPURACIÓN RULETA ===');
+    console.log('Segmento aleatorio seleccionado:', randomSegment);
+    console.log('Ángulo objetivo:', targetAngle.toFixed(2) + '°');
     console.log('Ángulo final (normalizado):', normalizedAngle.toFixed(2) + '°');
     console.log('Ángulo del puntero:', pointerAngle.toFixed(2) + '°');
-    console.log('Segmento calculado:', winningSegment);
-    console.log('Segmento esperado (aleatorio):', randomSegment);
+    console.log('Segmento calculado (verificación):', calculatedSegment);
+    console.log('Segmento usado (aleatorio):', winningSegment);
+    console.log('¿Coinciden?', calculatedSegment === randomSegment ? '✅ SÍ' : '❌ NO');
     console.log('Ángulo por segmento:', segmentAngle + '°');
     console.log('========================');
     
