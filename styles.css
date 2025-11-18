@@ -570,12 +570,11 @@ html {
     width: 400px;
     height: 400px;
     margin: 0 auto 3rem;
-    aspect-ratio: 1;
 }
 
 .roulette-wheel {
-    width: 100%;
-    height: 100%;
+    width: 400px;
+    height: 400px;
     border-radius: 50%;
     position: relative;
     overflow: hidden;
@@ -586,7 +585,7 @@ html {
         0 0 0 3px rgba(255, 255, 255, 0.1);
     transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
     background: conic-gradient(
-        from 0deg,
+        from -90deg,
         #dd0031 0deg 45deg,
         #1976d2 45deg 90deg,
         #4caf50 90deg 135deg,
@@ -596,7 +595,6 @@ html {
         #00bcd4 270deg 315deg,
         #ffc107 315deg 360deg
     );
-    aspect-ratio: 1;
 }
 
 .roulette-wheel::after {
@@ -618,123 +616,109 @@ html {
 
 .roulette-segment {
     position: absolute;
-    width: 50%;
-    height: 50%;
-    left: 50%;
-    top: 50%;
-    transform-origin: 0% 0%;
+    width: 200px;
+    height: 200px;
+    left: 200px;
+    top: 0;
+    transform-origin: 0% 100%;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
+    padding-top: 20px;
     font-weight: 700;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: white;
     text-shadow: 
         2px 2px 4px rgba(0, 0, 0, 0.9),
         0 0 8px rgba(0, 0, 0, 0.6);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
-    overflow: visible;
+    overflow: hidden;
     box-sizing: border-box;
     z-index: 2;
     background: transparent;
-    writing-mode: horizontal-tb;
-    text-orientation: mixed;
 }
 
 .roulette-segment::after {
     content: '';
     position: absolute;
-    right: -2px;
+    right: 0;
     top: 0;
-    width: 4px;
+    width: 3px;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: rgba(0, 0, 0, 0.8);
     z-index: 3;
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.4);
-}
-
-.roulette-segment::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
-    pointer-events: none;
-    z-index: 1;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.5);
 }
 
 .roulette-segment span {
-    position: absolute;
-    left: 50%;
-    top: 30%;
-    transform: translateX(-50%) rotate(0deg);
+    position: relative;
+    transform: rotate(0deg);
     white-space: nowrap;
+    z-index: 2;
 }
 
 .roulette-segment:nth-child(1) {
-    transform: rotate(-22.5deg) translateY(-50%);
+    transform: rotate(-22.5deg);
 }
 
 .roulette-segment:nth-child(1) span {
-    transform: translateX(-50%) rotate(22.5deg);
+    transform: rotate(22.5deg);
 }
 
 .roulette-segment:nth-child(2) {
-    transform: rotate(22.5deg) translateY(-50%);
+    transform: rotate(22.5deg);
 }
 
 .roulette-segment:nth-child(2) span {
-    transform: translateX(-50%) rotate(-22.5deg);
+    transform: rotate(-22.5deg);
 }
 
 .roulette-segment:nth-child(3) {
-    transform: rotate(67.5deg) translateY(-50%);
+    transform: rotate(67.5deg);
 }
 
 .roulette-segment:nth-child(3) span {
-    transform: translateX(-50%) rotate(-67.5deg);
+    transform: rotate(-67.5deg);
 }
 
 .roulette-segment:nth-child(4) {
-    transform: rotate(112.5deg) translateY(-50%);
+    transform: rotate(112.5deg);
 }
 
 .roulette-segment:nth-child(4) span {
-    transform: translateX(-50%) rotate(-112.5deg);
+    transform: rotate(-112.5deg);
 }
 
 .roulette-segment:nth-child(5) {
-    transform: rotate(157.5deg) translateY(-50%);
+    transform: rotate(157.5deg);
 }
 
 .roulette-segment:nth-child(5) span {
-    transform: translateX(-50%) rotate(-157.5deg);
+    transform: rotate(-157.5deg);
 }
 
 .roulette-segment:nth-child(6) {
-    transform: rotate(202.5deg) translateY(-50%);
+    transform: rotate(202.5deg);
 }
 
 .roulette-segment:nth-child(6) span {
-    transform: translateX(-50%) rotate(-202.5deg);
+    transform: rotate(-202.5deg);
 }
 
 .roulette-segment:nth-child(7) {
-    transform: rotate(247.5deg) translateY(-50%);
+    transform: rotate(247.5deg);
 }
 
 .roulette-segment:nth-child(7) span {
-    transform: translateX(-50%) rotate(-247.5deg);
+    transform: rotate(-247.5deg);
 }
 
 .roulette-segment:nth-child(8) {
-    transform: rotate(292.5deg) translateY(-50%);
+    transform: rotate(292.5deg);
 }
 
 .roulette-segment:nth-child(8) span {
-    transform: translateX(-50%) rotate(-292.5deg);
+    transform: rotate(-292.5deg);
 }
 
 .roulette-pointer {
@@ -1248,9 +1232,17 @@ html {
         height: 300px;
     }
 
+    .roulette-wheel {
+        width: 300px;
+        height: 300px;
+    }
+
     .roulette-segment {
-        font-size: 0.8rem;
-        padding-left: 25px;
+        width: 150px;
+        height: 150px;
+        left: 150px;
+        font-size: 0.75rem;
+        padding-top: 15px;
     }
 
     .roulette-container {
@@ -1380,9 +1372,23 @@ html {
         height: 250px;
     }
 
+    .roulette-wheel {
+        width: 250px;
+        height: 250px;
+        border: 12px solid #1a1a1a;
+    }
+
     .roulette-segment {
-        font-size: 0.7rem;
-        padding-left: 20px;
+        width: 125px;
+        height: 125px;
+        left: 125px;
+        font-size: 0.65rem;
+        padding-top: 12px;
+    }
+
+    .roulette-wheel::after {
+        width: 50px;
+        height: 50px;
     }
 
     .roulette-container {
