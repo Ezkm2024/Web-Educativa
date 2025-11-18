@@ -346,20 +346,26 @@ function spinRoulette() {
     // - Los segmentos HTML están rotados según su índice
     // - El puntero está fijo en la parte superior (visualmente 0°, matemáticamente -90°)
     
-    // Calcular los centros de los segmentos dinámicamente
-    // Cada segmento está centrado en: (índice * segmentAngle) - (segmentAngle / 2)
-    // Pero ajustado para que el primer segmento esté centrado en -22.5° (o equivalente)
+    // Calcular los centros de los segmentos según el CSS
+    // Los segmentos en CSS están rotados: -11.25°, 11.25°, 33.75°, 56.25°, etc.
+    // Estos son los ángulos de rotación de cada segmento desde el centro
+    // Para 16 segmentos: segmentAngle = 22.5°
+    // Segmento 0: -11.25° = -segmentAngle/2
+    // Segmento 1: 11.25° = segmentAngle/2
+    // Segmento 2: 33.75° = 3*segmentAngle/2
+    // Segmento N: (2*N - 1) * segmentAngle / 2
     const segmentCenters = [];
     for (let i = 0; i < segments; i++) {
-        // El primer segmento está centrado en -22.5° (o -segmentAngle/2)
-        // Los siguientes están espaciados cada segmentAngle grados
-        const centerAngle = (i * segmentAngle) - (segmentAngle / 2);
+        // Fórmula que coincide con las rotaciones del CSS
+        const centerAngle = ((2 * i - 1) * segmentAngle) / 2;
         segmentCenters.push(centerAngle);
     }
     
     const targetSegmentCenter = segmentCenters[randomSegment];
     const rotationOffset = -90; // Offset del conic-gradient
-    const targetAngle = targetSegmentCenter - rotationOffset; // Ángulo necesario para centrar el segmento
+    // Para que el segmento quede en el puntero (arriba = -90° matemático):
+    // Necesitamos rotar la ruleta para que el centro del segmento esté en -90°
+    const targetAngle = targetSegmentCenter - rotationOffset;
     
     const finalAngle = currentRotation + (spins * 360) + targetAngle;
     currentRotation = finalAngle;
@@ -409,34 +415,34 @@ function spinRoulette() {
     // Si la ruleta rotó X grados, el segmento que estaba en -X ahora está en 0°
     // Pero necesitamos mapear esto a los índices de los segmentos
     
-    // Calcular el ángulo del segmento que está en el puntero
-    // El puntero está en 0° visual = -90° matemático
+    // Calcular el segmento ganador desde el ángulo final
+    // El puntero está fijo en la parte superior (0° visual = -90° matemático)
+    // Cuando la ruleta rota, necesitamos saber qué segmento está ahora en el puntero
+    
+    // El ángulo normalizado nos dice cuánto rotó la ruleta
+    // Si la ruleta rotó X grados, el segmento que estaba en -X ahora está en el puntero
+    // Pero necesitamos considerar el offset del conic-gradient (-90°)
+    
+    // Método directo: usar el segmento aleatorio que calculamos
+    // porque lo rotamos específicamente para que quede en el puntero
+    let winningSegment = randomSegment;
+    
+    // Verificación: calcular desde el ángulo final para confirmar
+    // El puntero está en -90° (arriba en coordenadas matemáticas)
     // Después de rotar normalizedAngle, el segmento que está en el puntero es:
-    let segmentAngleAtPointer = (-90 - normalizedAngle + 360) % 360;
+    // El que originalmente estaba en: -90° - normalizedAngle
+    let originalAngleAtPointer = (-90 - normalizedAngle + 360) % 360;
     
-    // Mapear este ángulo a un índice de segmento
-    // Convertir los centros de segmentos a rango 0-360
-    const segmentAngles360 = segmentCenters.map(angle => (angle + 360) % 360);
-    
-    // Encontrar el segmento más cercano al ángulo calculado
-    let minDiff = Infinity;
-    let winningSegment = 0;
-    for (let i = 0; i < segments; i++) {
-        let diff = Math.abs(segmentAngleAtPointer - segmentAngles360[i]);
-        if (diff > 180) diff = 360 - diff; // Distancia circular
-        if (diff < minDiff) {
-            minDiff = diff;
-            winningSegment = i;
-        }
-    }
-    
-    // Verificación alternativa: usar división directa con offset
-    // Ajustar para que 0° visual corresponda al centro del primer segmento
-    let adjustedAngle = (segmentAngleAtPointer + 22.5 + 360) % 360;
+    // Convertir a coordenadas donde 0° es el primer segmento
+    // El primer segmento está centrado en -11.25° = 348.75° en rango 0-360
+    let adjustedAngle = (originalAngleAtPointer + 11.25) % 360;
     let calculatedSegment = Math.floor(adjustedAngle / segmentAngle) % segments;
     
-    // Usar el cálculo más preciso (el de distancia mínima)
-    // Pero verificar con el método alternativo
+    // Si el cálculo no coincide, usar el calculado (más preciso)
+    if (calculatedSegment !== randomSegment) {
+        console.warn('⚠️ Desincronización detectada. Usando cálculo desde ángulo final.');
+        winningSegment = calculatedSegment;
+    }
     
     // Logs de depuración detallados
     console.log('=== DEPURACIÓN RULETA ===');
