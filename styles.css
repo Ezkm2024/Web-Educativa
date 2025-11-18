@@ -621,13 +621,11 @@ html {
     width: 50%;
     height: 50%;
     left: 50%;
-    top: 0;
-    transform-origin: 0% 100%;
+    top: 50%;
+    transform-origin: 0% 0%;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    padding-left: 30px;
-    padding-bottom: 10px;
+    justify-content: center;
     font-weight: 700;
     font-size: 0.9rem;
     color: white;
@@ -635,22 +633,24 @@ html {
         2px 2px 4px rgba(0, 0, 0, 0.9),
         0 0 8px rgba(0, 0, 0, 0.6);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
-    overflow: hidden;
+    overflow: visible;
     box-sizing: border-box;
     z-index: 2;
     background: transparent;
+    writing-mode: horizontal-tb;
+    text-orientation: mixed;
 }
 
 .roulette-segment::after {
     content: '';
     position: absolute;
-    right: 0;
+    right: -2px;
     top: 0;
     width: 4px;
     height: 100%;
-    background: rgba(0, 0, 0, 0.6);
+    background: rgba(0, 0, 0, 0.7);
     z-index: 3;
-    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.4);
 }
 
 .roulette-segment::before {
@@ -665,36 +665,76 @@ html {
     z-index: 1;
 }
 
+.roulette-segment span {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    transform: translateX(-50%) rotate(0deg);
+    white-space: nowrap;
+}
+
 .roulette-segment:nth-child(1) {
-    transform: rotate(-22.5deg);
+    transform: rotate(-22.5deg) translateY(-50%);
+}
+
+.roulette-segment:nth-child(1) span {
+    transform: translateX(-50%) rotate(22.5deg);
 }
 
 .roulette-segment:nth-child(2) {
-    transform: rotate(22.5deg);
+    transform: rotate(22.5deg) translateY(-50%);
+}
+
+.roulette-segment:nth-child(2) span {
+    transform: translateX(-50%) rotate(-22.5deg);
 }
 
 .roulette-segment:nth-child(3) {
-    transform: rotate(67.5deg);
+    transform: rotate(67.5deg) translateY(-50%);
+}
+
+.roulette-segment:nth-child(3) span {
+    transform: translateX(-50%) rotate(-67.5deg);
 }
 
 .roulette-segment:nth-child(4) {
-    transform: rotate(112.5deg);
+    transform: rotate(112.5deg) translateY(-50%);
+}
+
+.roulette-segment:nth-child(4) span {
+    transform: translateX(-50%) rotate(-112.5deg);
 }
 
 .roulette-segment:nth-child(5) {
-    transform: rotate(157.5deg);
+    transform: rotate(157.5deg) translateY(-50%);
+}
+
+.roulette-segment:nth-child(5) span {
+    transform: translateX(-50%) rotate(-157.5deg);
 }
 
 .roulette-segment:nth-child(6) {
-    transform: rotate(202.5deg);
+    transform: rotate(202.5deg) translateY(-50%);
+}
+
+.roulette-segment:nth-child(6) span {
+    transform: translateX(-50%) rotate(-202.5deg);
 }
 
 .roulette-segment:nth-child(7) {
-    transform: rotate(247.5deg);
+    transform: rotate(247.5deg) translateY(-50%);
+}
+
+.roulette-segment:nth-child(7) span {
+    transform: translateX(-50%) rotate(-247.5deg);
 }
 
 .roulette-segment:nth-child(8) {
-    transform: rotate(292.5deg);
+    transform: rotate(292.5deg) translateY(-50%);
+}
+
+.roulette-segment:nth-child(8) span {
+    transform: translateX(-50%) rotate(-292.5deg);
 }
 
 .roulette-pointer {
