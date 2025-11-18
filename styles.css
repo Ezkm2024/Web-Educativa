@@ -587,26 +587,30 @@ html {
     position: absolute;
     width: 50%;
     height: 50%;
-    transform-origin: right bottom;
+    left: 50%;
+    top: 0;
+    transform-origin: left center;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: flex-start;
+    padding-left: 20%;
     font-weight: 700;
     font-size: 1rem;
     color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
-    clip-path: polygon(0 0, 100% 0, 50% 50%);
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
     overflow: hidden;
+    box-sizing: border-box;
 }
 
-.roulette-segment::before {
+.roulette-segment::after {
     content: '';
     position: absolute;
     right: 0;
-    bottom: 0;
+    top: 0;
     width: 2px;
     height: 100%;
-    background: rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.4);
 }
 
 .roulette-segment:nth-child(1) {

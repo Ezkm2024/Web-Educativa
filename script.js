@@ -245,13 +245,7 @@ document.querySelectorAll('.feature-card, .use-card, .resource-card, .concept-ca
 });
 
 // ========== JUEGO DE RULETA ==========
-const rouletteWheel = document.getElementById('roulette-wheel');
-const spinBtn = document.getElementById('spin-btn');
-const rouletteResult = document.getElementById('roulette-result');
-const rouletteInfo = document.getElementById('roulette-info');
-const roulettePoints = document.getElementById('roulette-points');
-const rouletteSpins = document.getElementById('roulette-spins');
-
+let rouletteWheel, spinBtn, rouletteResult, rouletteInfo, roulettePoints, rouletteSpins;
 let isSpinning = false;
 let totalPoints = 0;
 let totalSpins = 0;
@@ -295,14 +289,14 @@ const conceptInfo = {
 
 // Función para girar la ruleta
 function spinRoulette() {
-    if (isSpinning) return;
+    if (!rouletteWheel || !spinBtn || isSpinning) return;
     
     isSpinning = true;
     spinBtn.disabled = true;
     
     // Ocultar resultados anteriores
-    rouletteResult.classList.remove('show');
-    rouletteInfo.classList.remove('show');
+    if (rouletteResult) rouletteResult.classList.remove('show');
+    if (rouletteInfo) rouletteInfo.classList.remove('show');
     
     // Calcular rotación aleatoria (mínimo 3 vueltas completas)
     const segments = 8;
@@ -313,6 +307,10 @@ function spinRoulette() {
     const randomSegment = Math.floor(Math.random() * segments);
     
     // Calcular ángulo final
+    // El puntero está en la parte superior (0 grados)
+    // Queremos que el segmento aleatorio quede justo debajo del puntero
+    // Para esto, necesitamos rotar la ruleta de manera que el segmento quede arriba
+    // Como la ruleta rota en sentido horario, necesitamos ajustar
     const finalAngle = currentRotation + (spins * 360) + (randomSegment * segmentAngle);
     currentRotation = finalAngle;
     
@@ -320,10 +318,37 @@ function spinRoulette() {
     rouletteWheel.style.transform = `rotate(${finalAngle}deg)`;
     
     // Determinar concepto ganador
+    // El puntero está fijo en la parte superior (0 grados)
+    // Cuando la ruleta rota, necesitamos calcular qué segmento está debajo del puntero
+    // La ruleta rota en sentido horario, así que el segmento ganador es el que está
+    // en la posición opuesta al ángulo de rotación
     const normalizedAngle = (360 - (finalAngle % 360)) % 360;
-    const winningSegment = Math.floor(normalizedAngle / segmentAngle);
+    let winningSegment = Math.floor(normalizedAngle / segmentAngle);
+    
+    // Ajustar para que coincida con el orden de los segmentos en el DOM
+    // Los segmentos están ordenados de 0 a 7, empezando desde arriba
+    winningSegment = (segments - winningSegment) % segments;
+    
+    // Asegurarnos de que el índice esté en el rango correcto
+    if (winningSegment >= segments) winningSegment = segments - 1;
+    if (winningSegment < 0) winningSegment = 0;
+    
     const segmentsArray = Array.from(rouletteWheel.querySelectorAll('.roulette-segment'));
-    const winningConcept = segmentsArray[winningSegment].getAttribute('data-concept');
+    if (segmentsArray.length === 0) {
+        console.error('No se encontraron segmentos de ruleta');
+        isSpinning = false;
+        spinBtn.disabled = false;
+        return;
+    }
+    
+    const winningConcept = segmentsArray[winningSegment]?.getAttribute('data-concept');
+    
+    if (!winningConcept || !conceptInfo[winningConcept]) {
+        console.error('Concepto ganador no encontrado:', winningConcept);
+        isSpinning = false;
+        spinBtn.disabled = false;
+        return;
+    }
     
     // Mostrar resultado después de la animación
     setTimeout(() => {
@@ -333,17 +358,21 @@ function spinRoulette() {
         totalSpins++;
         
         // Actualizar estadísticas
-        roulettePoints.textContent = totalPoints;
-        rouletteSpins.textContent = totalSpins;
+        if (roulettePoints) roulettePoints.textContent = totalPoints;
+        if (rouletteSpins) rouletteSpins.textContent = totalSpins;
         
         // Mostrar resultado
-        rouletteResult.textContent = `¡${winningConcept}! +${pointsEarned} puntos`;
-        rouletteResult.classList.add('show');
+        if (rouletteResult) {
+            rouletteResult.textContent = `¡${winningConcept}! +${pointsEarned} puntos`;
+            rouletteResult.classList.add('show');
+        }
         
         // Mostrar información
         setTimeout(() => {
-            rouletteInfo.textContent = concept.description;
-            rouletteInfo.classList.add('show');
+            if (rouletteInfo) {
+                rouletteInfo.textContent = concept.description;
+                rouletteInfo.classList.add('show');
+            }
         }, 500);
         
         isSpinning = false;
@@ -394,8 +423,24 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Event listener para el botón de girar
-if (spinBtn) {
-    spinBtn.addEventListener('click', spinRoulette);
+// Inicializar ruleta cuando el DOM esté listo
+function initRoulette() {
+    rouletteWheel = document.getElementById('roulette-wheel');
+    spinBtn = document.getElementById('spin-btn');
+    rouletteResult = document.getElementById('roulette-result');
+    rouletteInfo = document.getElementById('roulette-info');
+    roulettePoints = document.getElementById('roulette-points');
+    rouletteSpins = document.getElementById('roulette-spins');
+    
+    if (spinBtn) {
+        spinBtn.addEventListener('click', spinRoulette);
+    }
+}
+
+// Inicializar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initRoulette);
+} else {
+    initRoulette();
 }
 
