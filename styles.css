@@ -577,7 +577,7 @@ html {
     height: 400px;
     border-radius: 50%;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     border: 15px solid #1a1a1a;
     box-shadow: 
         0 0 40px rgba(0, 0, 0, 0.4),
@@ -585,7 +585,7 @@ html {
         0 0 0 3px rgba(255, 255, 255, 0.1);
     transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
     background: conic-gradient(
-        from -90deg,
+        from 0deg,
         #dd0031 0deg 45deg,
         #1976d2 45deg 90deg,
         #4caf50 90deg 135deg,
@@ -624,7 +624,7 @@ html {
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding-top: 20px;
+    padding-top: 25px;
     font-weight: 700;
     font-size: 0.85rem;
     color: white;
@@ -632,7 +632,7 @@ html {
         2px 2px 4px rgba(0, 0, 0, 0.9),
         0 0 8px rgba(0, 0, 0, 0.6);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
-    overflow: hidden;
+    overflow: visible;
     box-sizing: border-box;
     z-index: 2;
     background: transparent;
@@ -651,89 +651,106 @@ html {
 }
 
 .roulette-segment span {
-    position: relative;
-    transform: rotate(0deg);
+    position: absolute;
+    left: 50%;
+    top: 25px;
+    transform: translateX(-50%);
     white-space: nowrap;
     z-index: 2;
+    max-width: 80px;
+    text-align: center;
+    line-height: 1.2;
 }
 
 .roulette-segment:nth-child(1) {
-    transform: rotate(-22.5deg);
+    transform: rotate(0deg);
 }
 
 .roulette-segment:nth-child(1) span {
-    transform: rotate(22.5deg);
+    transform: translateX(-50%) rotate(0deg);
 }
 
 .roulette-segment:nth-child(2) {
-    transform: rotate(22.5deg);
+    transform: rotate(45deg);
 }
 
 .roulette-segment:nth-child(2) span {
-    transform: rotate(-22.5deg);
+    transform: translateX(-50%) rotate(-45deg);
 }
 
 .roulette-segment:nth-child(3) {
-    transform: rotate(67.5deg);
+    transform: rotate(90deg);
 }
 
 .roulette-segment:nth-child(3) span {
-    transform: rotate(-67.5deg);
+    transform: translateX(-50%) rotate(-90deg);
 }
 
 .roulette-segment:nth-child(4) {
-    transform: rotate(112.5deg);
+    transform: rotate(135deg);
 }
 
 .roulette-segment:nth-child(4) span {
-    transform: rotate(-112.5deg);
+    transform: translateX(-50%) rotate(-135deg);
 }
 
 .roulette-segment:nth-child(5) {
-    transform: rotate(157.5deg);
+    transform: rotate(180deg);
 }
 
 .roulette-segment:nth-child(5) span {
-    transform: rotate(-157.5deg);
+    transform: translateX(-50%) rotate(-180deg);
 }
 
 .roulette-segment:nth-child(6) {
-    transform: rotate(202.5deg);
+    transform: rotate(225deg);
 }
 
 .roulette-segment:nth-child(6) span {
-    transform: rotate(-202.5deg);
+    transform: translateX(-50%) rotate(-225deg);
 }
 
 .roulette-segment:nth-child(7) {
-    transform: rotate(247.5deg);
+    transform: rotate(270deg);
 }
 
 .roulette-segment:nth-child(7) span {
-    transform: rotate(-247.5deg);
+    transform: translateX(-50%) rotate(-270deg);
 }
 
 .roulette-segment:nth-child(8) {
-    transform: rotate(292.5deg);
+    transform: rotate(315deg);
 }
 
 .roulette-segment:nth-child(8) span {
-    transform: rotate(-292.5deg);
+    transform: translateX(-50%) rotate(-315deg);
 }
 
 .roulette-pointer {
     position: absolute;
-    top: -25px;
+    top: -30px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 25px solid transparent;
-    border-right: 25px solid transparent;
-    border-top: 50px solid var(--primary-color);
+    border-left: 20px solid transparent;
+    border-right: 20px solid transparent;
+    border-top: 40px solid var(--primary-color);
     z-index: 10;
     filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
     animation: pointerPulse 2s infinite;
+}
+
+.roulette-pointer::after {
+    content: '';
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 30px;
+    background: var(--primary-color);
+    z-index: 11;
 }
 
 @keyframes pointerPulse {
@@ -1241,8 +1258,14 @@ html {
         width: 150px;
         height: 150px;
         left: 150px;
-        font-size: 0.75rem;
-        padding-top: 15px;
+        font-size: 0.7rem;
+        padding-top: 18px;
+    }
+
+    .roulette-segment span {
+        top: 18px;
+        max-width: 60px;
+        font-size: 0.7rem;
     }
 
     .roulette-container {
@@ -1382,8 +1405,14 @@ html {
         width: 125px;
         height: 125px;
         left: 125px;
-        font-size: 0.65rem;
-        padding-top: 12px;
+        font-size: 0.6rem;
+        padding-top: 15px;
+    }
+
+    .roulette-segment span {
+        top: 15px;
+        max-width: 50px;
+        font-size: 0.6rem;
     }
 
     .roulette-wheel::after {
