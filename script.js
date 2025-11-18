@@ -361,19 +361,8 @@ function spinRoulette() {
         if (roulettePoints) roulettePoints.textContent = totalPoints;
         if (rouletteSpins) rouletteSpins.textContent = totalSpins;
         
-        // Mostrar resultado
-        if (rouletteResult) {
-            rouletteResult.textContent = `¡${winningConcept}! +${pointsEarned} puntos`;
-            rouletteResult.classList.add('show');
-        }
-        
-        // Mostrar información
-        setTimeout(() => {
-            if (rouletteInfo) {
-                rouletteInfo.textContent = concept.description;
-                rouletteInfo.classList.add('show');
-            }
-        }, 500);
+        // Mostrar modal
+        showRouletteModal(winningConcept, pointsEarned, concept.description);
         
         isSpinning = false;
         spinBtn.disabled = false;
@@ -383,6 +372,38 @@ function spinRoulette() {
             createConfetti();
         }
     }, 4000);
+}
+
+// Función para mostrar el modal
+function showRouletteModal(concept, points, description) {
+    const modal = document.getElementById('roulette-modal');
+    const modalTitle = document.getElementById('roulette-modal-title');
+    const modalConcept = document.getElementById('roulette-modal-concept');
+    const modalPoints = document.getElementById('roulette-modal-points');
+    const modalDescription = document.getElementById('roulette-modal-description');
+    
+    if (!modal) return;
+    
+    // Actualizar contenido del modal
+    if (modalConcept) modalConcept.textContent = concept;
+    if (modalPoints) modalPoints.textContent = `+${points} puntos`;
+    if (modalDescription) modalDescription.textContent = description;
+    
+    // Mostrar modal
+    modal.classList.add('show');
+    document.body.style.overflow = 'hidden'; // Prevenir scroll
+    
+    // Efecto de confeti
+    createConfetti();
+}
+
+// Función para cerrar el modal
+function closeRouletteModal() {
+    const modal = document.getElementById('roulette-modal');
+    if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = ''; // Restaurar scroll
+    }
 }
 
 // Función para crear efecto de confeti
@@ -435,6 +456,35 @@ function initRoulette() {
     if (spinBtn) {
         spinBtn.addEventListener('click', spinRoulette);
     }
+    
+    // Event listeners para cerrar el modal
+    const modalCloseBtn = document.getElementById('roulette-modal-close');
+    const modalBtnClose = document.getElementById('roulette-modal-btn-close');
+    const modal = document.getElementById('roulette-modal');
+    
+    if (modalCloseBtn) {
+        modalCloseBtn.addEventListener('click', closeRouletteModal);
+    }
+    
+    if (modalBtnClose) {
+        modalBtnClose.addEventListener('click', closeRouletteModal);
+    }
+    
+    // Cerrar modal al hacer clic fuera
+    if (modal) {
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeRouletteModal();
+            }
+        });
+    }
+    
+    // Cerrar modal con ESC
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal && modal.classList.contains('show')) {
+            closeRouletteModal();
+        }
+    });
 }
 
 // Inicializar cuando el DOM esté listo

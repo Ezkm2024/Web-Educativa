@@ -578,9 +578,12 @@ html {
     border-radius: 50%;
     position: relative;
     overflow: hidden;
-    border: 8px solid var(--text-dark);
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    border: 12px solid #1a1a1a;
+    box-shadow: 
+        0 0 40px rgba(0, 0, 0, 0.4),
+        inset 0 0 20px rgba(0, 0, 0, 0.2);
     transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+    background: radial-gradient(circle at center, #2a2a2a 0%, #1a1a1a 100%);
 }
 
 .roulette-segment {
@@ -593,24 +596,33 @@ html {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    padding-left: 20%;
+    padding-left: 15%;
     font-weight: 700;
-    font-size: 1rem;
+    font-size: 0.95rem;
     color: white;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+    text-shadow: 
+        2px 2px 4px rgba(0, 0, 0, 0.8),
+        0 0 10px rgba(0, 0, 0, 0.5);
     clip-path: polygon(0 0, 100% 0, 50% 100%);
     overflow: hidden;
     box-sizing: border-box;
+    border-right: 3px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s;
 }
 
-.roulette-segment::after {
+.roulette-segment:hover {
+    filter: brightness(1.1);
+}
+
+.roulette-segment::before {
     content: '';
     position: absolute;
-    right: 0;
+    left: 0;
     top: 0;
-    width: 2px;
+    width: 100%;
     height: 100%;
-    background: rgba(255, 255, 255, 0.4);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, transparent 50%);
+    pointer-events: none;
 }
 
 .roulette-segment:nth-child(1) {
@@ -655,16 +667,26 @@ html {
 
 .roulette-pointer {
     position: absolute;
-    top: -20px;
+    top: -25px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
-    border-left: 20px solid transparent;
-    border-right: 20px solid transparent;
-    border-top: 40px solid var(--primary-color);
+    border-left: 25px solid transparent;
+    border-right: 25px solid transparent;
+    border-top: 50px solid var(--primary-color);
     z-index: 10;
-    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.5));
+    animation: pointerPulse 2s infinite;
+}
+
+@keyframes pointerPulse {
+    0%, 100% {
+        transform: translateX(-50%) scale(1);
+    }
+    50% {
+        transform: translateX(-50%) scale(1.05);
+    }
 }
 
 .roulette-controls {
@@ -726,49 +748,161 @@ html {
     color: var(--primary-color);
 }
 
-.roulette-result {
-    text-align: center;
-    padding: 1.5rem;
+/* Modal de Ruleta */
+.roulette-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.roulette-modal.show {
+    display: flex;
+}
+
+.roulette-modal-content {
+    background: white;
+    border-radius: 20px;
+    max-width: 500px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: modalSlideIn 0.4s ease;
+    transform-origin: center;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.7) translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+.roulette-modal-close {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    color: var(--text-light);
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all 0.3s;
+    z-index: 1;
+}
+
+.roulette-modal-close:hover {
+    background: var(--bg-light);
+    color: var(--text-dark);
+    transform: rotate(90deg);
+}
+
+.roulette-modal-header {
     background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-dark) 100%);
     color: white;
-    border-radius: 15px;
-    font-size: 1.5rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    min-height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    opacity: 0;
-    transform: scale(0.8);
-    transition: all 0.5s;
-}
-
-.roulette-result.show {
-    opacity: 1;
-    transform: scale(1);
-}
-
-.roulette-info {
-    background: var(--bg-light);
-    padding: 2rem;
-    border-radius: 15px;
-    min-height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    padding: 2.5rem 2rem 2rem;
+    border-radius: 20px 20px 0 0;
     text-align: center;
+    position: relative;
+}
+
+.roulette-modal-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 0.6s ease;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+
+.roulette-modal-header h2 {
+    font-size: 2rem;
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.roulette-modal-body {
+    padding: 2rem;
+    text-align: center;
+}
+
+.roulette-modal-concept {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    padding: 1rem;
+    background: var(--bg-light);
+    border-radius: 10px;
+}
+
+.roulette-modal-points {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--success-color);
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.roulette-modal-description {
     font-size: 1.1rem;
     line-height: 1.8;
     color: var(--text-dark);
-    opacity: 0;
-    transform: translateY(20px);
-    transition: all 0.5s;
+    background: var(--bg-light);
+    padding: 1.5rem;
+    border-radius: 10px;
+    border-left: 4px solid var(--primary-color);
 }
 
-.roulette-info.show {
-    opacity: 1;
-    transform: translateY(0);
+.roulette-modal-footer {
+    padding: 1.5rem 2rem;
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+}
+
+.btn-modal-close {
+    padding: 1rem 3rem;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+}
+
+.btn-modal-close:hover {
+    background: var(--primary-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(221, 0, 49, 0.4);
 }
 
 /* Recursos */
@@ -1044,6 +1178,7 @@ html {
 
     .roulette-segment {
         font-size: 0.85rem;
+        padding-left: 12%;
     }
 
     .roulette-container {
@@ -1057,6 +1192,40 @@ html {
     .resources-grid,
     .concepts-grid {
         grid-template-columns: 1fr;
+    }
+
+    .roulette-modal-content {
+        width: 95%;
+        max-height: 85vh;
+    }
+
+    .roulette-modal-header {
+        padding: 2rem 1.5rem 1.5rem;
+    }
+
+    .roulette-modal-icon {
+        font-size: 3rem;
+    }
+
+    .roulette-modal-header h2 {
+        font-size: 1.5rem;
+    }
+
+    .roulette-modal-body {
+        padding: 1.5rem;
+    }
+
+    .roulette-modal-concept {
+        font-size: 1.5rem;
+    }
+
+    .roulette-modal-points {
+        font-size: 2.5rem;
+    }
+
+    .roulette-modal-description {
+        font-size: 1rem;
+        padding: 1.25rem;
     }
 }
 
@@ -1140,7 +1309,8 @@ html {
     }
 
     .roulette-segment {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
+        padding-left: 10%;
     }
 
     .roulette-container {
@@ -1161,13 +1331,43 @@ html {
         font-size: 1.5rem;
     }
 
-    .roulette-result {
-        font-size: 1.2rem;
+    .roulette-modal-content {
+        width: 95%;
+        margin: 1rem;
+    }
+
+    .roulette-modal-header {
+        padding: 1.5rem 1rem 1rem;
+    }
+
+    .roulette-modal-icon {
+        font-size: 2.5rem;
+    }
+
+    .roulette-modal-header h2 {
+        font-size: 1.25rem;
+    }
+
+    .roulette-modal-body {
+        padding: 1.25rem;
+    }
+
+    .roulette-modal-concept {
+        font-size: 1.25rem;
+        padding: 0.75rem;
+    }
+
+    .roulette-modal-points {
+        font-size: 2rem;
+    }
+
+    .roulette-modal-description {
+        font-size: 0.95rem;
         padding: 1rem;
     }
 
-    .roulette-info {
-        padding: 1.5rem;
+    .btn-modal-close {
+        padding: 0.9rem 2rem;
         font-size: 1rem;
     }
 
