@@ -307,10 +307,10 @@ function spinRoulette() {
     const randomSegment = Math.floor(Math.random() * segments);
     
     // Calcular ángulo final
-    // El puntero está en la parte superior (0 grados)
-    // Queremos que el segmento aleatorio quede justo debajo del puntero
-    // Para esto, necesitamos rotar la ruleta de manera que el segmento quede arriba
-    // Como la ruleta rota en sentido horario, necesitamos ajustar
+    // El puntero está en la parte superior (0 grados / -90deg en coordenadas estándar)
+    // Los segmentos están rotados: 0deg, 45deg, 90deg, 135deg, 180deg, 225deg, 270deg, 315deg
+    // Cada segmento ocupa 45 grados (360 / 8)
+    // Queremos que el segmento aleatorio quede centrado debajo del puntero
     const finalAngle = currentRotation + (spins * 360) + (randomSegment * segmentAngle);
     currentRotation = finalAngle;
     
@@ -318,20 +318,40 @@ function spinRoulette() {
     rouletteWheel.style.transform = `rotate(${finalAngle}deg)`;
     
     // Determinar concepto ganador
-    // El puntero está fijo en la parte superior (0 grados)
+    // El puntero está fijo en la parte superior (0 grados en CSS, pero -90deg en coordenadas matemáticas)
     // Cuando la ruleta rota, necesitamos calcular qué segmento está debajo del puntero
-    // La ruleta rota en sentido horario, así que el segmento ganador es el que está
-    // en la posición opuesta al ángulo de rotación
-    const normalizedAngle = (360 - (finalAngle % 360)) % 360;
-    let winningSegment = Math.floor(normalizedAngle / segmentAngle);
+    // La ruleta rota en sentido horario (positivo en CSS)
     
-    // Ajustar para que coincida con el orden de los segmentos en el DOM
-    // Los segmentos están ordenados de 0 a 7, empezando desde arriba
-    winningSegment = (segments - winningSegment) % segments;
+    // Normalizar el ángulo final a 0-360
+    let normalizedAngle = ((finalAngle % 360) + 360) % 360;
+    
+    // El puntero apunta a 0 grados (arriba)
+    // Cuando la ruleta rota X grados, el segmento que estaba en -X grados ahora está en 0
+    // Necesitamos calcular qué segmento está en la posición del puntero
+    // Como la ruleta rota, el segmento ganador es el que está en la posición opuesta
+    let pointerAngle = (360 - normalizedAngle) % 360;
+    
+    // Calcular el índice del segmento ganador
+    // Cada segmento ocupa 45 grados, empezando desde 0deg
+    // El segmento 0 va de -22.5deg a 22.5deg (centrado en 0deg)
+    // El segmento 1 va de 22.5deg a 67.5deg (centrado en 45deg)
+    // etc.
+    
+    // Ajustar para que el centro del primer segmento esté en 0deg
+    let winningSegment = Math.floor((pointerAngle + (segmentAngle / 2)) / segmentAngle) % segments;
     
     // Asegurarnos de que el índice esté en el rango correcto
     if (winningSegment >= segments) winningSegment = segments - 1;
     if (winningSegment < 0) winningSegment = 0;
+    
+    // Logs de depuración
+    console.log('=== DEPURACIÓN RULETA ===');
+    console.log('Ángulo final (normalizado):', normalizedAngle.toFixed(2) + '°');
+    console.log('Ángulo del puntero:', pointerAngle.toFixed(2) + '°');
+    console.log('Segmento calculado:', winningSegment);
+    console.log('Segmento esperado (aleatorio):', randomSegment);
+    console.log('Ángulo por segmento:', segmentAngle + '°');
+    console.log('========================');
     
     const segmentsArray = Array.from(rouletteWheel.querySelectorAll('.roulette-segment'));
     if (segmentsArray.length === 0) {
@@ -341,14 +361,23 @@ function spinRoulette() {
         return;
     }
     
+    // Verificar que el segmento calculado sea válido
+    if (winningSegment < 0 || winningSegment >= segmentsArray.length) {
+        console.error('Índice de segmento inválido:', winningSegment);
+        winningSegment = 0; // Fallback al primer segmento
+    }
+    
     const winningConcept = segmentsArray[winningSegment]?.getAttribute('data-concept');
     
     if (!winningConcept || !conceptInfo[winningConcept]) {
-        console.error('Concepto ganador no encontrado:', winningConcept);
+        console.error('Concepto ganador no encontrado:', winningConcept, 'en segmento:', winningSegment);
+        console.log('Segmentos disponibles:', segmentsArray.map(s => s.getAttribute('data-concept')));
         isSpinning = false;
         spinBtn.disabled = false;
         return;
     }
+    
+    console.log('✅ Concepto ganador confirmado:', winningConcept);
     
     // Mostrar resultado después de la animación
     setTimeout(() => {
