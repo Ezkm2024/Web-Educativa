@@ -450,12 +450,11 @@ function spinRoulette() {
     console.log('Centro del segmento target (CSS):', targetSegmentCenter + '°');
     console.log('Ángulo objetivo calculado:', targetAngle.toFixed(2) + '°');
     console.log('Ángulo final (normalizado):', normalizedAngle.toFixed(2) + '°');
-    console.log('Ángulo del segmento en puntero:', segmentAngleAtPointer.toFixed(2) + '°');
-    console.log('Segmento calculado (distancia mínima):', winningSegment);
+    console.log('Ángulo original en puntero:', originalAngleAtPointer.toFixed(2) + '°');
+    console.log('Ángulo ajustado:', adjustedAngle.toFixed(2) + '°');
     console.log('Segmento calculado (división):', calculatedSegment);
     console.log('Segmento usado:', winningSegment);
     console.log('¿Coinciden con target?', winningSegment === randomSegment ? '✅ SÍ' : '❌ NO');
-    console.log('Diferencia mínima:', minDiff.toFixed(2) + '°');
     console.log('Ángulo por segmento:', segmentAngle + '°');
     console.log('========================');
     
