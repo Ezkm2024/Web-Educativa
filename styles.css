@@ -586,14 +586,22 @@ html {
     transition: transform 4s cubic-bezier(0.17, 0.67, 0.12, 0.99);
     background: conic-gradient(
         from -90deg,
-        #dd0031 0deg 45deg,
-        #1976d2 45deg 90deg,
-        #4caf50 90deg 135deg,
-        #ff9800 135deg 180deg,
-        #9c27b0 180deg 225deg,
-        #f44336 225deg 270deg,
-        #00bcd4 270deg 315deg,
-        #ffc107 315deg 360deg
+        #dd0031 0deg 22.5deg,
+        #1976d2 22.5deg 45deg,
+        #4caf50 45deg 67.5deg,
+        #ff9800 67.5deg 90deg,
+        #9c27b0 90deg 112.5deg,
+        #f44336 112.5deg 135deg,
+        #00bcd4 135deg 157.5deg,
+        #ffc107 157.5deg 180deg,
+        #e91e63 180deg 202.5deg,
+        #795548 202.5deg 225deg,
+        #607d8b 225deg 247.5deg,
+        #ff5722 247.5deg 270deg,
+        #009688 270deg 292.5deg,
+        #3f51b5 292.5deg 315deg,
+        #ff6f00 315deg 337.5deg,
+        #8bc34a 337.5deg 360deg
     );
 }
 
@@ -652,78 +660,143 @@ html {
 .roulette-segment span {
     position: absolute;
     left: 50%;
-    top: 35px;
+    top: 30px;
     transform: translateX(-50%);
     white-space: nowrap;
     z-index: 2;
-    max-width: 90px;
+    max-width: 70px;
     text-align: center;
-    line-height: 1.2;
-    font-size: 0.85rem;
+    line-height: 1.1;
+    font-size: 0.75rem;
+    font-weight: 700;
 }
 
+/* Generar rotaciones dinámicamente para cualquier número de segmentos */
+.roulette-segment {
+    --segment-index: 0;
+    --total-segments: 16;
+    --segment-angle: calc(360deg / var(--total-segments));
+    --center-offset: calc(var(--segment-angle) / 2);
+    --rotation: calc((var(--segment-index) * var(--segment-angle)) - var(--center-offset));
+    transform: rotate(var(--rotation));
+}
+
+.roulette-segment span {
+    --text-rotation: calc(-1 * var(--rotation));
+    transform: translateX(-50%) rotate(var(--text-rotation));
+}
+
+/* Rotaciones específicas para los primeros 16 segmentos */
 .roulette-segment:nth-child(1) {
-    transform: rotate(-22.5deg);
+    transform: rotate(-11.25deg);
 }
-
 .roulette-segment:nth-child(1) span {
-    transform: translateX(-50%) rotate(22.5deg);
+    transform: translateX(-50%) rotate(11.25deg);
 }
 
 .roulette-segment:nth-child(2) {
-    transform: rotate(22.5deg);
+    transform: rotate(11.25deg);
 }
-
 .roulette-segment:nth-child(2) span {
-    transform: translateX(-50%) rotate(-22.5deg);
+    transform: translateX(-50%) rotate(-11.25deg);
 }
 
 .roulette-segment:nth-child(3) {
-    transform: rotate(67.5deg);
+    transform: rotate(33.75deg);
 }
-
 .roulette-segment:nth-child(3) span {
-    transform: translateX(-50%) rotate(-67.5deg);
+    transform: translateX(-50%) rotate(-33.75deg);
 }
 
 .roulette-segment:nth-child(4) {
-    transform: rotate(112.5deg);
+    transform: rotate(56.25deg);
 }
-
 .roulette-segment:nth-child(4) span {
-    transform: translateX(-50%) rotate(-112.5deg);
+    transform: translateX(-50%) rotate(-56.25deg);
 }
 
 .roulette-segment:nth-child(5) {
-    transform: rotate(157.5deg);
+    transform: rotate(78.75deg);
 }
-
 .roulette-segment:nth-child(5) span {
-    transform: translateX(-50%) rotate(-157.5deg);
+    transform: translateX(-50%) rotate(-78.75deg);
 }
 
 .roulette-segment:nth-child(6) {
-    transform: rotate(202.5deg);
+    transform: rotate(101.25deg);
 }
-
 .roulette-segment:nth-child(6) span {
-    transform: translateX(-50%) rotate(-202.5deg);
+    transform: translateX(-50%) rotate(-101.25deg);
 }
 
 .roulette-segment:nth-child(7) {
-    transform: rotate(247.5deg);
+    transform: rotate(123.75deg);
 }
-
 .roulette-segment:nth-child(7) span {
-    transform: translateX(-50%) rotate(-247.5deg);
+    transform: translateX(-50%) rotate(-123.75deg);
 }
 
 .roulette-segment:nth-child(8) {
-    transform: rotate(292.5deg);
+    transform: rotate(146.25deg);
+}
+.roulette-segment:nth-child(8) span {
+    transform: translateX(-50%) rotate(-146.25deg);
 }
 
-.roulette-segment:nth-child(8) span {
-    transform: translateX(-50%) rotate(-292.5deg);
+.roulette-segment:nth-child(9) {
+    transform: rotate(168.75deg);
+}
+.roulette-segment:nth-child(9) span {
+    transform: translateX(-50%) rotate(-168.75deg);
+}
+
+.roulette-segment:nth-child(10) {
+    transform: rotate(191.25deg);
+}
+.roulette-segment:nth-child(10) span {
+    transform: translateX(-50%) rotate(-191.25deg);
+}
+
+.roulette-segment:nth-child(11) {
+    transform: rotate(213.75deg);
+}
+.roulette-segment:nth-child(11) span {
+    transform: translateX(-50%) rotate(-213.75deg);
+}
+
+.roulette-segment:nth-child(12) {
+    transform: rotate(236.25deg);
+}
+.roulette-segment:nth-child(12) span {
+    transform: translateX(-50%) rotate(-236.25deg);
+}
+
+.roulette-segment:nth-child(13) {
+    transform: rotate(258.75deg);
+}
+.roulette-segment:nth-child(13) span {
+    transform: translateX(-50%) rotate(-258.75deg);
+}
+
+.roulette-segment:nth-child(14) {
+    transform: rotate(281.25deg);
+}
+.roulette-segment:nth-child(14) span {
+    transform: translateX(-50%) rotate(-281.25deg);
+}
+
+.roulette-segment:nth-child(15) {
+    transform: rotate(303.75deg);
+}
+.roulette-segment:nth-child(15) span {
+    transform: translateX(-50%) rotate(-303.75deg);
+}
+
+.roulette-segment:nth-child(16) {
+    transform: rotate(326.25deg);
+}
+.roulette-segment:nth-child(16) span {
+    transform: translateX(-50%) rotate(-326.25deg);
 }
 
 .roulette-pointer {

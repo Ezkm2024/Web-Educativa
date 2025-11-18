@@ -284,6 +284,38 @@ const conceptInfo = {
     'HTTP': {
         description: 'El servicio HttpClient permite realizar peticiones HTTP a APIs. Angular incluye interceptores para manejar requests y responses de forma centralizada.',
         points: 10
+    },
+    'Dependency Injection': {
+        description: 'La inyección de dependencias es un patrón de diseño que permite inyectar servicios en componentes, facilitando el testing y la reutilización de código.',
+        points: 14
+    },
+    'Observables': {
+        description: 'Los Observables son una forma de manejar flujos de datos asíncronos. Permiten trabajar con eventos, peticiones HTTP y operaciones que ocurren en el tiempo.',
+        points: 15
+    },
+    'RxJS': {
+        description: 'RxJS (Reactive Extensions for JavaScript) es una librería para programación reactiva. Angular lo usa extensivamente para manejar operaciones asíncronas y eventos.',
+        points: 16
+    },
+    'Decoradores': {
+        description: 'Los decoradores son funciones especiales que modifican clases, métodos o propiedades. En Angular se usan @Component, @Injectable, @Input, @Output, etc.',
+        points: 11
+    },
+    'Lifecycle Hooks': {
+        description: 'Los lifecycle hooks son métodos que Angular llama en momentos específicos del ciclo de vida de un componente (ngOnInit, ngOnDestroy, ngAfterViewInit, etc.).',
+        points: 12
+    },
+    'Change Detection': {
+        description: 'El sistema de detección de cambios de Angular actualiza la vista cuando cambian los datos. Puede ser OnPush (optimizado) o Default (verifica todos los componentes).',
+        points: 13
+    },
+    'Guards': {
+        description: 'Los guards son servicios que controlan el acceso a rutas. Pueden prevenir navegación, redirigir o cargar datos antes de activar una ruta.',
+        points: 10
+    },
+    'Interceptors': {
+        description: 'Los interceptores interceptan y modifican peticiones HTTP y respuestas. Útiles para agregar headers, manejar errores globalmente o transformar datos.',
+        points: 11
     }
 };
 
@@ -299,8 +331,9 @@ function spinRoulette() {
     if (rouletteInfo) rouletteInfo.classList.remove('show');
     
     // Calcular rotación aleatoria (mínimo 3 vueltas completas)
-    const segments = 8;
-    const segmentAngle = 360 / segments; // 45 grados por segmento
+    const segmentsArray = Array.from(rouletteWheel.querySelectorAll('.roulette-segment'));
+    const segments = segmentsArray.length;
+    const segmentAngle = 360 / segments;
     const minSpins = 3;
     const maxSpins = 6;
     const spins = minSpins + Math.random() * (maxSpins - minSpins);
@@ -310,17 +343,20 @@ function spinRoulette() {
     // El conic-gradient en CSS usa "from -90deg", lo que significa:
     // - El primer color (rojo #dd0031) empieza en la parte superior (visualmente 0°)
     // - En coordenadas matemáticas, la parte superior es -90° (o 270°)
-    // - Los segmentos HTML están rotados: -22.5°, 22.5°, 67.5°, 112.5°, etc.
+    // - Los segmentos HTML están rotados según su índice
     // - El puntero está fijo en la parte superior (visualmente 0°, matemáticamente -90°)
     
-    // Calcular ángulo final para que el segmento aleatorio quede debajo del puntero
-    // Los segmentos están centrados en: -22.5°, 22.5°, 67.5°, 112.5°, 157.5°, 202.5°, 247.5°, 292.5°
-    // Para que el segmento N quede en el puntero (0° visual = -90° matemático):
-    // - Segmento 0 (centrado en -22.5°): necesita rotar -22.5° - (-90°) = 67.5°
-    // - Segmento 1 (centrado en 22.5°): necesita rotar 22.5° - (-90°) = 112.5°
-    // - En general: segmentCenterAngle - (-90°) = segmentCenterAngle + 90°
+    // Calcular los centros de los segmentos dinámicamente
+    // Cada segmento está centrado en: (índice * segmentAngle) - (segmentAngle / 2)
+    // Pero ajustado para que el primer segmento esté centrado en -22.5° (o equivalente)
+    const segmentCenters = [];
+    for (let i = 0; i < segments; i++) {
+        // El primer segmento está centrado en -22.5° (o -segmentAngle/2)
+        // Los siguientes están espaciados cada segmentAngle grados
+        const centerAngle = (i * segmentAngle) - (segmentAngle / 2);
+        segmentCenters.push(centerAngle);
+    }
     
-    const segmentCenters = [-22.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5];
     const targetSegmentCenter = segmentCenters[randomSegment];
     const rotationOffset = -90; // Offset del conic-gradient
     const targetAngle = targetSegmentCenter - rotationOffset; // Ángulo necesario para centrar el segmento
@@ -379,9 +415,8 @@ function spinRoulette() {
     let segmentAngleAtPointer = (-90 - normalizedAngle + 360) % 360;
     
     // Mapear este ángulo a un índice de segmento
-    // Los segmentos están en: -22.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5
-    // Convertir a rango 0-360: 337.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5
-    const segmentAngles360 = [337.5, 22.5, 67.5, 112.5, 157.5, 202.5, 247.5, 292.5];
+    // Convertir los centros de segmentos a rango 0-360
+    const segmentAngles360 = segmentCenters.map(angle => (angle + 360) % 360);
     
     // Encontrar el segmento más cercano al ángulo calculado
     let minDiff = Infinity;
@@ -418,7 +453,6 @@ function spinRoulette() {
     console.log('Ángulo por segmento:', segmentAngle + '°');
     console.log('========================');
     
-    const segmentsArray = Array.from(rouletteWheel.querySelectorAll('.roulette-segment'));
     if (segmentsArray.length === 0) {
         console.error('No se encontraron segmentos de ruleta');
         isSpinning = false;
