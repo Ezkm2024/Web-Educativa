@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Angular - Página Educativa</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">Angular</h1>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <nav class="nav" id="nav">
+                <a href="#introduccion" class="nav-link">Introducción</a>
+                <a href="#caracteristicas" class="nav-link">Características</a>
+                <a href="#trivia" class="nav-link">Trivia</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <!-- Sección Hero -->
+        <section class="hero">
+            <div class="container">
+                <div class="hero-content">
+                    <h2 class="hero-title">Aprende sobre Angular</h2>
+                    <p class="hero-subtitle">El framework de desarrollo web moderno y potente</p>
+                    <a href="#introduccion" class="btn-primary">Comenzar</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Introducción -->
+        <section id="introduccion" class="section">
+            <div class="container">
+                <h2 class="section-title">¿Qué es Angular?</h2>
+                <div class="intro-content">
+                    <div class="intro-text">
+                        <p>
+                            <strong>Angular</strong> es un framework de código abierto desarrollado por Google 
+                            para crear aplicaciones web dinámicas y de una sola página (SPA - Single Page Applications). 
+                            Está basado en TypeScript y utiliza un enfoque basado en componentes para construir 
+                            interfaces de usuario escalables y mantenibles.
+                        </p>
+                        <p>
+                            Angular fue lanzado inicialmente en 2010 como AngularJS, y luego fue completamente 
+                            reescrito como Angular 2+ (comúnmente conocido simplemente como Angular). La versión 
+                            actual ofrece un ecosistema completo para el desarrollo frontend moderno.
+                        </p>
+                    </div>
+                    <div class="intro-image">
+                        <div class="angular-logo">A</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Para qué sirve -->
+        <section class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">¿Para qué sirve Angular?</h2>
+                <div class="uses-grid">
+                    <div class="use-card">
+                        <div class="use-icon">🌐</div>
+                        <h3>Aplicaciones Web</h3>
+                        <p>Desarrollo de aplicaciones web complejas y escalables</p>
+                    </div>
+                    <div class="use-card">
+                        <div class="use-icon">📱</div>
+                        <h3>Aplicaciones Móviles</h3>
+                        <p>Creación de aplicaciones móviles con Ionic o NativeScript</p>
+                    </div>
+                    <div class="use-card">
+                        <div class="use-icon">💼</div>
+                        <h3>Aplicaciones Empresariales</h3>
+                        <p>Soluciones robustas para grandes organizaciones</p>
+                    </div>
+                    <div class="use-card">
+                        <div class="use-icon">🛒</div>
+                        <h3>E-commerce</h3>
+                        <p>Plataformas de comercio electrónico dinámicas</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Características -->
+        <section id="caracteristicas" class="section">
+            <div class="container">
+                <h2 class="section-title">Características y Ventajas</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-number">01</div>
+                        <h3>Arquitectura basada en Componentes</h3>
+                        <p>Organiza el código en componentes reutilizables que facilitan el mantenimiento y la escalabilidad.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">02</div>
+                        <h3>TypeScript</h3>
+                        <p>Utiliza TypeScript, que proporciona tipado estático y mejores herramientas de desarrollo.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">03</div>
+                        <h3>Inyección de Dependencias</h3>
+                        <p>Sistema robusto de inyección de dependencias que facilita la gestión de servicios y módulos.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">04</div>
+                        <h3>Two-Way Data Binding</h3>
+                        <p>Sincronización automática entre el modelo y la vista, reduciendo la cantidad de código necesario.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">05</div>
+                        <h3>CLI Potente</h3>
+                        <p>Angular CLI facilita la creación, desarrollo y despliegue de aplicaciones con comandos simples.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">06</div>
+                        <h3>Rutas y Navegación</h3>
+                        <p>Sistema de enrutamiento integrado para crear aplicaciones de múltiples vistas de manera sencilla.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">07</div>
+                        <h3>Testing Integrado</h3>
+                        <p>Herramientas de testing incluidas (Jasmine, Karma) para asegurar la calidad del código.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-number">08</div>
+                        <h3>Rendimiento Optimizado</h3>
+                        <p>Change Detection eficiente, lazy loading y tree-shaking para aplicaciones rápidas.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección Trivia -->
+        <section id="trivia" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">Trivia sobre Angular</h2>
+                <div class="trivia-container">
+                    <div class="trivia-header">
+                        <div class="score-display">
+                            <span class="score-label">Puntaje:</span>
+                            <span class="score-value" id="score">0</span>
+                            <span class="score-total">/ 5</span>
+                        </div>
+                        <div class="question-counter">
+                            <span id="question-number">1</span> / <span id="total-questions">5</span>
+                        </div>
+                    </div>
+                    
+                    <div class="trivia-content">
+                        <div id="trivia-question" class="trivia-question"></div>
+                        <div id="trivia-options" class="trivia-options"></div>
+                        <div id="trivia-feedback" class="trivia-feedback"></div>
+                        <button id="next-btn" class="btn-secondary" style="display: none;">Siguiente Pregunta</button>
+                        <button id="restart-btn" class="btn-secondary" style="display: none;">Reiniciar Trivia</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 Página Educativa sobre Angular. Desarrollado con HTML, CSS y JavaScript.</p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
